@@ -1,5 +1,10 @@
 {
-  "name": "waving-test-backend",
+  "engines": {
+    "node": ">=20.19.2",
+    "npm": ">=10.8.2",
+    "pnpm": ">=10.11.0"
+  },
+  "name": "desafio-teddy-backend",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -17,14 +22,35 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:generate": "npx typeorm migration:generate src/shared/migrations/$npm_config_name -d src/data-source.ts",
+    "migration:run": "npx typeorm migration:run -d src/data-source.ts",
+    "migration:show": "npx typeorm migration:show -d src/data-source.ts",
+    "migration:revert": "npx typeorm migration:revert -d src/data-source.ts",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org desafio --project node-nestjs ./out && sentry-cli sourcemaps upload --org desafio --project node-nestjs ./out"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "@sentry/nestjs": "^9.26.0",
+    "@types/passport-jwt": "^4.0.1",
+    "bcryptjs": "^3.0.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "dotenv": "^16.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pg": "^8.15.6",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.22"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -34,8 +60,10 @@
     "@nestjs/testing": "^11.0.1",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
+    "@types/bcryptjs": "^3.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
