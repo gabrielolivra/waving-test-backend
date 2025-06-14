@@ -2,7 +2,13 @@ import { BaseEntity } from 'src/shared/helpers/base.entity';
 import { UsersEntity } from 'src/users/entity/users.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { OrderItemEntity } from './order-item.entity';
-
+export enum CartStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  SHIPPED = 'shipped',
+  DELIVERED = 'delivered',
+  CANCELLED = 'cancelled',
+}
 @Entity({ name: 'order' })
 export class OrderEntity extends BaseEntity {
   @ManyToOne(() => UsersEntity, (user) => user.orders)
@@ -14,8 +20,12 @@ export class OrderEntity extends BaseEntity {
   @Column({ name: 'total', type: 'numeric' })
   total: number;
 
-  @Column({ default: 'pending' })
-  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+ @Column({
+    type: 'enum',
+    enum: CartStatus,
+    default: CartStatus.PENDING,
+  })
+  status: CartStatus;
 
   @OneToMany(() => OrderItemEntity, (item) => item.order, { cascade: true })
   items: OrderItemEntity[];

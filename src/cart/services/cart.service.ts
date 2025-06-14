@@ -49,7 +49,7 @@ export class CartService {
       throw new BadRequestException('PRODUCT_IS_ALREADY_IN_CART');
     }
 
-    if (cart.quantity > product.stockQuantity) {
+    if (cart.quantity > product.stockQuantity || cart.quantity === 0) {
       throw new BadRequestException('PRODUCT_OUT_OF_STOCK');
     }
 
