@@ -1,29 +1,26 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CartEntity } from "src/cart/entity/cart.entity";
+import { BaseEntity } from "src/shared/helpers/base.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'item' })
-export class ItemRepository {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+export class ItemEntity extends BaseEntity {
 
-    @Column({ name: 'name', nullable: false })
-    name: string
+  @Column({ name: 'name', nullable: false })
+  name: string;
 
-    @Column({ name: 'description', nullable: false })
-    description:string
+  @Column({ name: 'description', nullable: false })
+  description: string;
 
-    @Column({ name: 'price', type: 'numeric', nullable: false })
-    price: number
+  @Column({ name: 'price', type: 'numeric', nullable: false })
+  price: number;
 
-    @Column({ name: 'image', nullable: false, default:'https://placehold.co/400' })
-    image: string
+  @Column({ name: 'image_url', nullable: false, default: 'https://placehold.co/400' })
+  imageUrl: string;
 
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  @Column({ name: 'stock_quantity', nullable: false, type: 'numeric' })
+  stockQuantity: number;
 
-    @UpdateDateColumn({ name: 'updated_at', nullable: true })
-    updatedAt: Date;
-
-    @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-    deletedAt: Date;
+  @OneToMany(() => CartEntity, cartItem => cartItem.product)
+  cartItems: CartEntity[];
 
 }

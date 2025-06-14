@@ -9,48 +9,48 @@ import { Roles } from "src/shared/decorators/roles.decorator";
 @Controller('item')
 @Injectable()
 export class ItemController {
-    constructor(private readonly itemService: ItemService) { }
+  constructor(private readonly itemService: ItemService) { }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Post('')
-    async create(
-        @Body() createItemDto: CreateItemDto
-    ) {
-        return await this.itemService.create(createItemDto)
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('')
+  async create(
+    @Body() createItemDto: CreateItemDto
+  ) {
+    return await this.itemService.create(createItemDto)
+  }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Get('')
-    async findAll() {
-        return await this.itemService.findAll()
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Get('')
+  async findAll() {
+    return await this.itemService.findAll()
+  }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Get('/:id')
-    async find(@Param('id') id: string) {
-        return await this.itemService.findOne(id)
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Get('/:id')
+  async find(@Param('id') id: string) {
+    return await this.itemService.findOne(id)
+  }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Put('/:id')
-    async update(
-        @Param('id') id: string,
-        @Body() updateItemDto: UpdateItemDto
-    ) {
-        return await this.itemService.update(id, updateItemDto)
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Put('/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateItemDto: UpdateItemDto
+  ) {
+    return await this.itemService.update(id, updateItemDto)
+  }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @Delete('/:id')
-    async remove(
-        @Param('id') id: string
-    ) {
-        return await this.itemService.remove(id)
-    }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Delete('/:id')
+  async remove(
+    @Param('id') id: string
+  ) {
+    return await this.itemService.remove(id)
+  }
 
 }

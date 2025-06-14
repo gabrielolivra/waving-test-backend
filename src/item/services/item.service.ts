@@ -1,26 +1,26 @@
 import { NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ItemRepository } from "../entity/item.entity";
+import { ItemEntity } from "../entity/item.entity";
 import { CreateItemDto, UpdateItemDto } from "../controllers/dto/item.dto";
 
 export class ItemService {
 
   constructor(
-    @InjectRepository(ItemRepository)
-    private itemRepository: Repository<ItemRepository>,
+    @InjectRepository(ItemEntity)
+    private itemRepository: Repository<ItemEntity>,
   ) {}
 
-  async create(createItemDto: CreateItemDto): Promise<ItemRepository> {
+  async create(createItemDto: CreateItemDto): Promise<ItemEntity> {
     const item = this.itemRepository.create(createItemDto);
     return this.itemRepository.save(item);
   }
 
-  async findAll(): Promise<ItemRepository[]> {
+  async findAll(): Promise<ItemEntity[]> {
     return this.itemRepository.find();
   }
 
-  async findOne(id: string): Promise<ItemRepository> {
+  async findOne(id: string): Promise<ItemEntity> {
     const item = await this.itemRepository.findOne({ where: { id } });
     if (!item) {
       throw new NotFoundException(`Item with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class ItemService {
     return item;
   }
 
-  async update(id: string, updateItemDto: UpdateItemDto): Promise<ItemRepository> {
+  async update(id: string, updateItemDto: UpdateItemDto): Promise<ItemEntity> {
     const item = await this.findOne(id);
     this.itemRepository.merge(item, updateItemDto);
     return this.itemRepository.save(item);
