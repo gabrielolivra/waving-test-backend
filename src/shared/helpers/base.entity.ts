@@ -2,14 +2,15 @@ import { CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedC
 
 export abstract class BaseEntity {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: Date;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+  
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at', nullable: true })
-    updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', nullable: true })
+  updatedAt: Date;
 
-    @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-    deletedAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
 }

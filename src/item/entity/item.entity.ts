@@ -5,22 +5,22 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryG
 @Entity({ name: 'item' })
 export class ItemEntity extends BaseEntity {
 
-    @Column({ name: 'name', nullable: false })
-    name: string;
+  @Column({ name: 'name', nullable: false })
+  name: string;
 
-    @Column({ name: 'description', nullable: false })
-    description: string;
+  @Column({ name: 'description', nullable: false })
+  description: string;
 
-    @Column({ name: 'price', type: 'numeric', nullable: false })
-    price: number;
+  @Column({ name: 'price', type: 'numeric', nullable: false })
+  price: number;
 
-    @Column({ name: 'image_url', nullable: false, default: 'https://placehold.co/400' })
-    imageUrl: string;
+  @Column({ name: 'image_url', nullable: false, default: 'https://placehold.co/400' })
+  imageUrl: string;
 
-    @Column({ name: 'stock_quantity', nullable: false, type: 'numeric' })
-    stockQuantity: number;
+  @Column({ name: 'stock_quantity', nullable: false, type: 'numeric' })
+  stockQuantity: number;
 
-    @OneToMany(() => CartEntity, cartItem => cartItem.product)
-    cartItems: CartEntity[];
+  @OneToMany(() => CartEntity, cartItem => cartItem.product)
+  cartItems: CartEntity[];
 
 }
