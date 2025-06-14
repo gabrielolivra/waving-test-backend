@@ -8,23 +8,23 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
-import { APP_FILTER } from '@nestjs/core';
 import { AppDataSource } from './data-source';
 import { LoggerMiddleware } from './shared/midldleware/logger.midleware';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true,   
     }),
     TypeOrmModule.forRoot({
       ...AppDataSource.options,
     }),
     AuthModule,
     UsersModule,
-    SentryModule.forRoot(),
+    ItemModule,
   ],
+  
 
   controllers: [],
   providers: [],
