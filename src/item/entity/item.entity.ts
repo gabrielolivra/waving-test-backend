@@ -1,7 +1,7 @@
 import { CartEntity } from "src/cart/entity/cart.entity";
 import { OrderItemEntity } from "src/order/entity/order-item.entity";
 import { BaseEntity } from "src/shared/helpers/base.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'item' })
 export class ItemEntity extends BaseEntity {
@@ -21,7 +21,7 @@ export class ItemEntity extends BaseEntity {
   @Column({ name: 'stock_quantity', nullable: false, type: 'numeric' })
   stockQuantity: number;
 
-  @OneToMany(() => CartEntity, cartItem => cartItem.product)
+  @OneToMany(() => CartEntity, cartItem => cartItem.item)
   cartItems: CartEntity[];
 
 

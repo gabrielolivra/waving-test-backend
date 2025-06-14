@@ -19,7 +19,7 @@ export class CartService {
     const findCart = await this.cartEntity.find({
       where: { user: { id: user.sub } },
       relations: {
-        product:true
+        item:true
       }
 
     })
@@ -27,44 +27,43 @@ export class CartService {
     return findCart
   }
 
-  async cartAdd(user: ICurrentUser, cart: CreateCartDto) {
+ async cartAdd(user: ICurrentUser, cart: CreateCartDto) {
 
-    const verifyProduct = await this.itemEntity.findOne({
-      where: { id: cart.productId },
-      relations: {
-        cartItems: true
-      }
-    })
+  const product = await this.itemEntity.findOne({
+    where: { id: cart.productId },
+  });
 
-    const verifyProductInCart = await this.cartEntity.findOne({
-      relations: {user: true},
-      where: {
-        product: {id: verifyProduct?.id},
-        user: {id: user.sub}
-      }
-    })
-
-    if (!verifyProduct) {
-      throw new BadRequestException('PRODUCT_NOT_FOUND')
-    }
-
-    if(verifyProductInCart){
-      throw new BadRequestException('PRODUCT_IS_ADD_IN_CART')
-    }
-
-    if (cart.quantity > verifyProduct.stockQuantity) {
-      throw new BadRequestException('PRODUCT_OUT_OF_STOCK')
-    }
-
-    const payload = {
-      user: { id: user.sub },
-      product: verifyProduct,
-      quantity: cart.quantity
-    }
-    const data =  this.cartEntity.create(payload)
-
-    return await this.cartEntity.save(data)
+  if (!product) {
+    throw new BadRequestException('PRODUCT_NOT_FOUND');
   }
+
+  const existingCartItem = await this.cartEntity.findOne({
+    where: {
+      item: { id: product.id },
+      user: { id: user.sub }
+    },
+    relations:{
+      item: true, user: true
+    }, 
+  });
+
+  if (existingCartItem) {
+    throw new BadRequestException('PRODUCT_IS_ALREADY_IN_CART');
+  }
+
+  if (cart.quantity > product.stockQuantity) {
+    throw new BadRequestException('PRODUCT_OUT_OF_STOCK');
+  }
+
+  const cartItem = this.cartEntity.create({
+    user: { id: user.sub },
+    item: product,
+    quantity: cart.quantity,
+  });
+
+  return await this.cartEntity.save(cartItem);
+}
+
 
   async updateCart(user: ICurrentUser,id:string, cartData: UpdateCartDto) {
     const verifyCart = await this.cartEntity.findOne({

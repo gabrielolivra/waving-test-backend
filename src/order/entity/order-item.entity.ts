@@ -12,7 +12,7 @@ export class OrderItemEntity extends BaseEntity {
   @ManyToOne(() => ItemEntity, item => item.orderItems)
   item: ItemEntity;
 
-  @Column({name:'quantity', type:'number'})
+  @Column({name:'quantity', type:'numeric'})
   quantity: number;
 
   @Column({name:'price', type:'numeric'})
