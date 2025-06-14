@@ -17,7 +17,6 @@ export class PaymentEntity extends BaseEntity {
   })
   paymentMethod: PaymentMethod;
 
-
   @Column({ name: 'amount', type: 'numeric', nullable:false })
 
   @OneToOne(() => OrderEntity, order => order.payment)
