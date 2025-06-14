@@ -13,11 +13,12 @@ import { LoggerMiddleware } from './shared/midldleware/logger.midleware';
 import { ItemModule } from './item/item.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,   
+      isGlobal: true,
     }),
     TypeOrmModule.forRoot({
       ...AppDataSource.options,
@@ -27,6 +28,7 @@ import { OrderModule } from './order/order.module';
     ItemModule,
     CartModule,
     OrderModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],

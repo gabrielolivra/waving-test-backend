@@ -8,9 +8,16 @@ import { CartEntity } from 'src/cart/entity/cart.entity';
 import { ItemEntity } from 'src/item/entity/item.entity';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([OrderEntity, OrderItemEntity, CartEntity, ItemEntity])],
-	controllers: [OrderController],
-	providers: [OrderService],
-	exports: [OrderService],
+  imports: [
+    TypeOrmModule.forFeature([
+      OrderEntity,
+      OrderItemEntity,
+      CartEntity,
+      ItemEntity,
+    ]),
+  ],
+  controllers: [OrderController],
+  providers: [OrderService],
+  exports: [OrderService],
 })
-export class OrderModule { }
+export class OrderModule {}
