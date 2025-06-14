@@ -10,7 +10,7 @@ export class CartEntity extends BaseEntity {
   user: UsersEntity;
 
   @ManyToOne(() => ItemEntity, item => item.cartItems)
-  product: ItemEntity;
+  item: ItemEntity;
 
   @Column({ name: 'quantity', type: 'numeric', nullable: false })
   quantity: number;

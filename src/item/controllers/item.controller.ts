@@ -11,14 +11,6 @@ import { Roles } from "src/shared/decorators/roles.decorator";
 export class ItemController {
   constructor(private readonly itemService: ItemService) { }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
-  @Post('')
-  async create(
-    @Body() createItemDto: CreateItemDto
-  ) {
-    return await this.itemService.create(createItemDto)
-  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
@@ -26,12 +18,27 @@ export class ItemController {
   async findAll() {
     return await this.itemService.findAll()
   }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
+  @Get('items-available')
+  async itemsAvailable() {
+    return await this.itemService.listAvailableItems()
+  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Get('/:id')
   async find(@Param('id') id: string) {
     return await this.itemService.findOne(id)
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Post('')
+  async create(
+    @Body() createItemDto: CreateItemDto
+  ) {
+    return await this.itemService.create(createItemDto)
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

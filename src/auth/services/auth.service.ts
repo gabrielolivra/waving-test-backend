@@ -9,7 +9,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signIn(data: LoginDto): Promise<{ access_token: string }> {
     const { email, password } = data;
@@ -30,7 +30,6 @@ export class AuthService {
       username: user.name,
       role: user.role,
     };
-    console.log(payload);
     return {
       access_token: await this.jwtService.signAsync(payload, {
         expiresIn: '24h',
