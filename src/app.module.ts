@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
 import { LoggerMiddleware } from './shared/midldleware/logger.midleware';
 import { ItemModule } from './item/item.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ItemModule } from './item/item.module';
     AuthModule,
     UsersModule,
     ItemModule,
+    CartModule,
   ],
   
 

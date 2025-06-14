@@ -7,12 +7,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthController } from './controllers/auth.controller';
-import { Users } from 'src/users/entity/users.entity';
+import { UsersEntity } from 'src/users/entity/users.entity';
 import { UsersService } from 'src/users/services/users.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([UsersEntity]),
     PassportModule,
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
