@@ -1,11 +1,10 @@
-import { NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
-import { ItemEntity } from "../entity/item.entity";
-import { CreateItemDto, UpdateItemDto } from "../controllers/dto/item.dto";
+import { NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, MoreThan } from 'typeorm';
+import { ItemEntity } from '../entity/item.entity';
+import { CreateItemDto, UpdateItemDto } from '../controllers/dto/item.dto';
 
 export class ItemService {
-
   constructor(
     @InjectRepository(ItemEntity)
     private itemRepository: Repository<ItemEntity>,
@@ -39,13 +38,12 @@ export class ItemService {
     await this.itemRepository.remove(item);
   }
 
-  async listAvailableItems(){
+  async listAvailableItems() {
     const items = await this.itemRepository.find({
       where: {
-        stockQuantity: MoreThan(0)
-      }
-    })
-    return items
+        stockQuantity: MoreThan(0),
+      },
+    });
+    return items;
   }
-
 }

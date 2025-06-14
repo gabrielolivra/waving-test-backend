@@ -9,7 +9,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signIn(data: LoginDto): Promise<{ access_token: string }> {
     const { email, password } = data;

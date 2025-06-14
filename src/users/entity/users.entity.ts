@@ -36,12 +36,17 @@ export class UsersEntity {
   @CreateDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-  @Column({ name: 'role', default: Role.User })
+   @Column({
+    name: 'role',
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+  })
   role: Role;
 
-   @OneToMany(() => OrderEntity, order => order.user)
+  @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];
 
-  @OneToMany(() => CartEntity, cartItem => cartItem.user)
+  @OneToMany(() => CartEntity, (cartItem) => cartItem.user)
   cartItems: CartEntity[];
 }

@@ -1,95 +1,116 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { OrderEntity } from "../entity/order.entity";
-import { CartEntity } from "src/cart/entity/cart.entity";
-import { OrderItemEntity } from "../entity/order-item.entity";
-import { ItemEntity } from "src/item/entity/item.entity";
-import { BadRequestException } from "@nestjs/common";
-import { ICurrentUser } from "src/shared/decorators/current-user.decorator";
-import { CreateOrderDto } from "../controllers/dto/order.dto";
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { CartStatus, OrderEntity } from '../entity/order.entity';
+import { CartEntity } from 'src/cart/entity/cart.entity';
+import { OrderItemEntity } from '../entity/order-item.entity';
+import { ItemEntity } from 'src/item/entity/item.entity';
+import { BadRequestException } from '@nestjs/common';
+import { ICurrentUser } from 'src/shared/decorators/current-user.decorator';
+import { CreateOrderDto } from '../controllers/dto/order.dto';
 
 export class OrderService {
-	constructor(
-		@InjectRepository(OrderEntity)
-		private readonly orderEntity: Repository<OrderEntity>,
-		@InjectRepository(CartEntity)
-		private readonly cartEntity: Repository<CartEntity>,
-		@InjectRepository(OrderItemEntity)
-		private readonly orderItemEntity: Repository<OrderItemEntity>,
-		@InjectRepository(ItemEntity)
-		private readonly itemEntity: Repository<ItemEntity>,
-	) { }
+  constructor(
+    @InjectRepository(OrderEntity)
+    private readonly orderEntity: Repository<OrderEntity>,
+    @InjectRepository(CartEntity)
+    private readonly cartEntity: Repository<CartEntity>,
+    @InjectRepository(OrderItemEntity)
+    private readonly orderItemEntity: Repository<OrderItemEntity>,
+    @InjectRepository(ItemEntity)
+    private readonly itemEntity: Repository<ItemEntity>,
+    private readonly dataSource:DataSource
+  ) { }
 
-	async createOrderFromCart(user: ICurrentUser, data: CreateOrderDto): Promise<OrderEntity> {
-		const verifyCart = await this.cartEntity.find({
-			where: { user: { id: user.sub } },
-			relations: {
-				item: true,
-				user: true,
-			}
-		})
+    async createOrderFromCart(
+    user: ICurrentUser,
+    data: CreateOrderDto,
+  ): Promise<OrderEntity> {
+    const queryRunner = this.dataSource.createQueryRunner();
 
-		if (verifyCart.length === 0) {
-			throw new BadRequestException('CART_IS_EMPTY')
-		}
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-		const order = this.orderEntity.create({
-			user: { id: user.sub },
-			total: verifyCart.reduce((acc, item) => {
-				return acc + item.item.price * item.quantity;
-			}, 0),
-			status: 'pending',
-			shippingAddress: data.shippingAddress
-		});
+    try {
+      const cartRepository = queryRunner.manager.getRepository(CartEntity);
+      const orderRepository = queryRunner.manager.getRepository(OrderEntity);
+      const orderItemRepository = queryRunner.manager.getRepository(OrderItemEntity);
+      const itemRepository = queryRunner.manager.getRepository(ItemEntity);
 
-		await this.orderEntity.save(order)
+      const verifyCart = await cartRepository.find({
+        where: { user: { id: user.sub } },
+        relations: { item: true, user: true },
+      });
 
-		for (const cartItem of verifyCart) {
-			const product = cartItem.item
+      if (verifyCart.length === 0) {
+        throw new BadRequestException('CART_IS_EMPTY');
+      }
 
-			if (product.stockQuantity < cartItem.quantity) {
-				throw new BadRequestException(`Insufficient stock for product: ${product.name}`);
-			}
+      const total = verifyCart.reduce((acc, item) => {
+        return acc + item.item.price * item.quantity;
+      }, 0);
 
-			const orderItem = this.orderItemEntity.create({
-				order: order,
-				item: product,
-				quantity: cartItem.quantity,
-				price: product.price,
-			});
+      const order = orderRepository.create({
+        user: { id: user.sub },
+        total,
+        status: CartStatus.PENDING,
+        shippingAddress: data.shippingAddress,
+      });
 
-			await this.orderItemEntity.save(orderItem)
+      await orderRepository.save(order);
 
-		}
+      for (const cartItem of verifyCart) {
+        const product = cartItem.item;
 
-		for (const item of verifyCart) {
-			const verifyItem = await this.itemEntity.findOne({
-				where: {
-					id: item.item.id
-				}
-			})
+        if (product.stockQuantity < cartItem.quantity) {
+          throw new BadRequestException(
+            `Insufficient stock for product: ${product.name}`,
+          );
+        }
 
-			if (verifyItem) {
-				await this.itemEntity.update(verifyItem.id, {
-					stockQuantity: verifyItem.stockQuantity - item.quantity
-				})
-			}
-		}
+        const orderItem = orderItemRepository.create({
+          order,
+          item: product,
+          quantity: cartItem.quantity,
+          price: product.price,
+        });
 
-		await this.cartEntity.remove(verifyCart)
+        await orderItemRepository.save(orderItem);
+      }
 
-		return order
-	}
+      for (const item of verifyCart) {
+        const verifyItem = await itemRepository.findOne({
+          where: { id: item.item.id },
+        });
 
-	async myOrders(user: ICurrentUser): Promise<OrderEntity[]> {
-		const myOrders = await this.orderEntity.find({
-			where: {
-				user: {
-					id: user.sub
-				}
-			}
-		})
+        if (verifyItem) {
+          verifyItem.stockQuantity -= item.quantity;
+          await itemRepository.save(verifyItem);
+        }
+      }
 
-		return myOrders
-	}
+      await cartRepository.remove(verifyCart);
+
+      await queryRunner.commitTransaction();
+
+      return order;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+
+  async myOrders(user: ICurrentUser): Promise<OrderEntity[]> {
+    const myOrders = await this.orderEntity.find({
+      where: {
+        user: {
+          id: user.sub,
+        },
+      },
+    });
+
+    return myOrders;
+  }
 }
