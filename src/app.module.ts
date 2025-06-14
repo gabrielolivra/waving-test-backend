@@ -12,6 +12,7 @@ import { AppDataSource } from './data-source';
 import { LoggerMiddleware } from './shared/midldleware/logger.midleware';
 import { ItemModule } from './item/item.module';
 import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -25,9 +26,8 @@ import { CartModule } from './cart/cart.module';
     UsersModule,
     ItemModule,
     CartModule,
+    OrderModule,
   ],
-  
-
   controllers: [],
   providers: [],
 })

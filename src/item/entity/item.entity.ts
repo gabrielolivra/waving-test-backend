@@ -1,4 +1,5 @@
 import { CartEntity } from "src/cart/entity/cart.entity";
+import { OrderItemEntity } from "src/order/entity/order-item.entity";
 import { BaseEntity } from "src/shared/helpers/base.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -22,5 +23,9 @@ export class ItemEntity extends BaseEntity {
 
   @OneToMany(() => CartEntity, cartItem => cartItem.product)
   cartItems: CartEntity[];
+
+
+  @OneToMany(() => OrderItemEntity, orderItem => orderItem.item)
+  orderItems: OrderItemEntity[];
 
 }
