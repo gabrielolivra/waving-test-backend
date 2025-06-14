@@ -1,13 +1,15 @@
 import { Role } from 'src/auth/role.enum';
+import { CartEntity } from 'src/cart/entity/cart.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'users' })
-export class Users {
+export class UsersEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -35,4 +37,7 @@ export class Users {
 
   @Column({ name: 'role', default: Role.User })
   role: Role;
+
+  @OneToMany(() => CartEntity, cartItem => cartItem.user)
+  cartItems: CartEntity[];
 }
