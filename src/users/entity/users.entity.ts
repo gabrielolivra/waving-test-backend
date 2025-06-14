@@ -1,5 +1,6 @@
 import { Role } from 'src/auth/role.enum';
 import { CartEntity } from 'src/cart/entity/cart.entity';
+import { OrderEntity } from 'src/order/entity/order.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -37,6 +38,9 @@ export class UsersEntity {
 
   @Column({ name: 'role', default: Role.User })
   role: Role;
+
+   @OneToMany(() => OrderEntity, order => order.user)
+  orders: OrderEntity[];
 
   @OneToMany(() => CartEntity, cartItem => cartItem.user)
   cartItems: CartEntity[];

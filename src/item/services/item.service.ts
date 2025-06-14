@@ -1,6 +1,6 @@
 import { NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, MoreThan } from "typeorm";
 import { ItemEntity } from "../entity/item.entity";
 import { CreateItemDto, UpdateItemDto } from "../controllers/dto/item.dto";
 
@@ -37,6 +37,15 @@ export class ItemService {
   async remove(id: string): Promise<void> {
     const item = await this.findOne(id);
     await this.itemRepository.remove(item);
+  }
+
+  async listAvailableItems(){
+    const items = await this.itemRepository.find({
+      where: {
+        stockQuantity: MoreThan(0)
+      }
+    })
+    return items
   }
 
 }
