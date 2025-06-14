@@ -39,9 +39,9 @@ export class UsersEntity {
   @Column({ name: 'role', default: Role.User })
   role: Role;
 
-   @OneToMany(() => OrderEntity, order => order.user)
+  @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];
 
-  @OneToMany(() => CartEntity, cartItem => cartItem.user)
+  @OneToMany(() => CartEntity, (cartItem) => cartItem.user)
   cartItems: CartEntity[];
 }
