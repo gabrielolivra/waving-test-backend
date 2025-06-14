@@ -5,7 +5,6 @@ import { ItemEntity } from 'src/item/entity/item.entity';
 
 @Entity({ name: 'order_item' })
 export class OrderItemEntity extends BaseEntity {
-
   @Column({ name: 'quantity', type: 'numeric' })
   quantity: number;
 
@@ -14,7 +13,7 @@ export class OrderItemEntity extends BaseEntity {
 
   @ManyToOne(() => OrderEntity, (order) => order.items)
   order: OrderEntity;
-  
+
   @ManyToOne(() => ItemEntity, (item) => item.orderItems)
   item: ItemEntity;
 }

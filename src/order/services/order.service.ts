@@ -18,10 +18,10 @@ export class OrderService {
     private readonly orderItemEntity: Repository<OrderItemEntity>,
     @InjectRepository(ItemEntity)
     private readonly itemEntity: Repository<ItemEntity>,
-    private readonly dataSource:DataSource
-  ) { }
+    private readonly dataSource: DataSource,
+  ) {}
 
-    async createOrderFromCart(
+  async createOrderFromCart(
     user: ICurrentUser,
     data: CreateOrderDto,
   ): Promise<OrderEntity> {
@@ -33,7 +33,8 @@ export class OrderService {
     try {
       const cartRepository = queryRunner.manager.getRepository(CartEntity);
       const orderRepository = queryRunner.manager.getRepository(OrderEntity);
-      const orderItemRepository = queryRunner.manager.getRepository(OrderItemEntity);
+      const orderItemRepository =
+        queryRunner.manager.getRepository(OrderItemEntity);
       const itemRepository = queryRunner.manager.getRepository(ItemEntity);
 
       const verifyCart = await cartRepository.find({
@@ -100,7 +101,6 @@ export class OrderService {
       await queryRunner.release();
     }
   }
-
 
   async myOrders(user: ICurrentUser): Promise<OrderEntity[]> {
     const myOrders = await this.orderEntity.find({

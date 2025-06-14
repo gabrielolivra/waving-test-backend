@@ -5,7 +5,6 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'cart' })
 export class CartEntity extends BaseEntity {
-  
   @Column({ name: 'quantity', type: 'numeric', nullable: false })
   quantity: number;
 

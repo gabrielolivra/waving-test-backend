@@ -12,7 +12,6 @@ export enum CartStatus {
 }
 @Entity({ name: 'order' })
 export class OrderEntity extends BaseEntity {
-  
   @Column({ name: 'shipping_address' })
   shippingAddress: string;
 
@@ -29,7 +28,7 @@ export class OrderEntity extends BaseEntity {
   @OneToMany(() => OrderItemEntity, (item) => item.order, { cascade: true })
   items: OrderItemEntity[];
 
-  @OneToOne(() => PaymentEntity, payment => payment.order)
+  @OneToOne(() => PaymentEntity, (payment) => payment.order)
   payment: PaymentEntity;
 
   @ManyToOne(() => UsersEntity, (user) => user.orders)
