@@ -1,11 +1,12 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { OrderEntity } from "../entity/order.entity";
 import { CartEntity } from "src/cart/entity/cart.entity";
 import { OrderItemEntity } from "../entity/order-item.entity";
 import { ItemEntity } from "src/item/entity/item.entity";
-import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { BadRequestException } from "@nestjs/common";
 import { ICurrentUser } from "src/shared/decorators/current-user.decorator";
+import { CreateOrderDto } from "../controllers/dto/order.dto";
 
 export class OrderService {
 	constructor(
@@ -19,7 +20,7 @@ export class OrderService {
 		private readonly itemEntity: Repository<ItemEntity>,
 	) { }
 
-	async createOrderFromCart(user: ICurrentUser): Promise<OrderEntity> {
+	async createOrderFromCart(user: ICurrentUser, data: CreateOrderDto): Promise<OrderEntity> {
 		const verifyCart = await this.cartEntity.find({
 			where: { user: { id: user.sub } },
 			relations: {
@@ -38,7 +39,7 @@ export class OrderService {
 				return acc + item.item.price * item.quantity;
 			}, 0),
 			status: 'pending',
-			shippingAddress: 'testinho'
+			shippingAddress: data.shippingAddress
 		});
 
 		await this.orderEntity.save(order)
@@ -68,10 +69,7 @@ export class OrderService {
 				}
 			})
 
-			console.log('item', item)
-
 			if (verifyItem) {
-				console.log('veio aqui', verifyItem)
 				await this.itemEntity.update(verifyItem.id, {
 					stockQuantity: verifyItem.stockQuantity - item.quantity
 				})
@@ -81,5 +79,17 @@ export class OrderService {
 		await this.cartEntity.remove(verifyCart)
 
 		return order
+	}
+
+	async myOrders(user: ICurrentUser): Promise<OrderEntity[]> {
+		const myOrders = await this.orderEntity.find({
+			where: {
+				user: {
+					id: user.sub
+				}
+			}
+		})
+
+		return myOrders
 	}
 }
