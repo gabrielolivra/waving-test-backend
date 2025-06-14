@@ -26,10 +26,4 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.User)
-  @Get('admin')
-  getAdminData() {
-    return 'Admin only';
-  }
 }

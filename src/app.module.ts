@@ -15,7 +15,7 @@ import { ItemModule } from './item/item.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true,   
     }),
     TypeOrmModule.forRoot({
       ...AppDataSource.options,
@@ -24,6 +24,7 @@ import { ItemModule } from './item/item.module';
     UsersModule,
     ItemModule,
   ],
+  
 
   controllers: [],
   providers: [],
