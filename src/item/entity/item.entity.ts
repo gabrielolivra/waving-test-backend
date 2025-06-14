@@ -1,11 +1,7 @@
 import { CartEntity } from 'src/cart/entity/cart.entity';
 import { OrderItemEntity } from 'src/order/entity/order-item.entity';
 import { BaseEntity } from 'src/shared/helpers/base.entity';
-import {
-  Column,
-  Entity,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'item' })
 export class ItemEntity extends BaseEntity {

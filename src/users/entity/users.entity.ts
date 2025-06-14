@@ -36,7 +36,7 @@ export class UsersEntity {
   @CreateDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-   @Column({
+  @Column({
     name: 'role',
     type: 'enum',
     enum: Role,
