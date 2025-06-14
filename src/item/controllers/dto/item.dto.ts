@@ -15,8 +15,11 @@ export class CreateItemDto {
 
   @IsOptional()
   @IsString()
-  image: string
+  imageUrl: string
 
+  @IsNumber()
+  @IsNotEmpty()
+  stockQuantity: number
 }
 
 export class UpdateItemDto {
@@ -34,6 +37,10 @@ export class UpdateItemDto {
 
   @IsNotEmpty()
   @IsString()
-  image: string
+  imageUrl: string
+
+  @IsNumber()
+  @IsNotEmpty()
+  stockQuantity: number
 
 }
